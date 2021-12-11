@@ -1,0 +1,6 @@
+bin/
+obj/
+unused/
+tools/a.exe
+tools/a.out
+tools/lcd.svg
