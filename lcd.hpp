@@ -7,10 +7,11 @@
 
 #include "types.hpp"
 
-class lcd {
+template <int t_width, int t_height>
+class lcd_ {
 public:
-  static const int WIDTH = 128;
-  static const int HEIGHT = 64;
+  static const int WIDTH = t_width;
+  static const int HEIGHT = t_height;
   static const int CHAR_WIDTH = 6;
   static const int CHAR_HEIGHT = 8;
 
@@ -51,12 +52,12 @@ private:
   }
 
 public:
-  lcd() noexcept {
+  lcd_() noexcept {
     this->data_[0] = 0x40;
     this->clear();
   }
 
-  ~lcd() noexcept {
+  ~lcd_() noexcept {
   }
 
   inline const void* data() const noexcept {
@@ -199,5 +200,19 @@ public:
     return this->draw_string(rect.left, rect.top, rect.right(), rect.bottom(), str, len, colour, halign, valign);
   }
 };
+
+#ifndef PI_LCD_MODULE
+#define PI_LCD_MODULE 0
+#endif
+// Haven't tested with any 96x16 module
+// #if PI_LCD_MODULE == 2
+// typedef lcd_<96, 16> lcd;
+// #endif
+#if PI_LCD_MODULE == 1
+typedef lcd_<128, 32> lcd;
+#else
+typedef lcd_<128, 64> lcd;
+#endif
+#undef PI_LCD_MODULE
 
 #endif // LCD_HEADER_INCLUDED

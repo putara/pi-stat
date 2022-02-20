@@ -25,20 +25,21 @@ private:
   void draw_bar_chart(const char* name, float value, const char* text, bool round) noexcept {
     const int x = lcd::CHAR_WIDTH * 4;
     const int y = this->y_;
-    this->lcd_.draw_rectangle(x, y, lcd::WIDTH, y + lcd::CHAR_HEIGHT + 3, WHITE);
+    const int height = lcd::CHAR_HEIGHT + (lcd::HEIGHT == 64 ? 2 : 1);
+    this->lcd_.draw_rectangle(x, y, lcd::WIDTH, y + height + 1, WHITE);
     if (round) {
       this->lcd_.set_pixel(x, y, BLACK);
       this->lcd_.set_pixel(lcd::WIDTH - 1, y, BLACK);
-      this->lcd_.set_pixel(x, y + lcd::CHAR_HEIGHT + 2, BLACK);
-      this->lcd_.set_pixel(lcd::WIDTH - 1, y + lcd::CHAR_HEIGHT + 2, BLACK);
+      this->lcd_.set_pixel(x, y + height, BLACK);
+      this->lcd_.set_pixel(lcd::WIDTH - 1, y + height, BLACK);
     }
-    this->lcd_.fill_rectangle(x + 1, y + 1, x + 1 + (lcd::WIDTH - 2 - x) * value, y + lcd::CHAR_HEIGHT + 2, WHITE);
-    this->lcd_.draw_string(0, y, lcd::WIDTH, y + lcd::CHAR_HEIGHT + 4, name, INVERSE, LEFT, CENTRE);
-    this->lcd_.draw_string(x + 2, y, lcd::WIDTH - 2 - lcd::CHAR_WIDTH * 3, y + lcd::CHAR_HEIGHT + 4, text, INVERSE, CENTRE, CENTRE);
+    this->lcd_.fill_rectangle(x + 1, y + 1, x + 1 + (lcd::WIDTH - 2 - x) * value, y + height, WHITE);
+    this->lcd_.draw_string(0, y, lcd::WIDTH, y + height + 2, name, INVERSE, LEFT, CENTRE);
+    this->lcd_.draw_string(x + 2, y, lcd::WIDTH - 2 - lcd::CHAR_WIDTH * 3, y + height + 2, text, INVERSE, CENTRE, CENTRE);
     char percent[32];
     snprintf(percent, sizeof(percent), "%.f%%", value * 100);
-    this->lcd_.draw_string(0, y, lcd::WIDTH - 2, y + lcd::CHAR_HEIGHT + 4, percent, INVERSE, RIGHT, CENTRE);
-    this->advance_y(lcd::CHAR_HEIGHT + 4);
+    this->lcd_.draw_string(0, y, lcd::WIDTH - 2, y + height + 2, percent, INVERSE, RIGHT, CENTRE);
+    this->advance_y(height + 2);
   }
 
   void draw_pattern(int x1, int y1, int x2, int y2) noexcept {

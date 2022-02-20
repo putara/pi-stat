@@ -36,12 +36,18 @@ int main() noexcept {
     renderer canvas;
     while (!done) {
       canvas.start();
-      canvas.print_title(config.title);
-      canvas.print_time();
-      canvas.print_ip(config.ifnames);
-      canvas.print_cpu();
-      canvas.print_mem();
-      canvas.print_disk(config.mountpoint);
+      if (lcd::HEIGHT == 64) {
+        canvas.print_title(config.title);
+        canvas.print_time();
+        canvas.print_ip(config.ifnames);
+        canvas.print_cpu();
+        canvas.print_mem();
+        canvas.print_disk(config.mountpoint);
+      } else if (lcd::HEIGHT == 32) {
+        canvas.print_ip(config.ifnames);
+        canvas.print_cpu();
+        canvas.print_mem();
+      }
       auto lcd = canvas.end();
       dev->refresh(lcd);
       os::wait_until_next_tick();

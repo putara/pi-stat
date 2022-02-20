@@ -8,6 +8,11 @@ OBJDIR = ./obj
 TARGET = $(BINDIR)/pi-stat
 TARGET_OBJS = $(OBJDIR)/main.o
 
+ifndef lcd
+lcd = 0
+endif
+CPPFLAGS += -DPI_LCD_MODULE=$(lcd)
+
 all: $(OBJDIR) $(BINDIR) $(TARGET)
 
 clean: cleanobj
@@ -17,7 +22,7 @@ clean: cleanobj
 cleanobj:
 	-rm -f $(TARGET_OBJS)
 
-$(OBJDIR)/%.o: %.cpp
+$(OBJDIR)/main.o: main.cpp ssd1306.hpp helpers.hpp render.hpp config.hpp types.hpp lcd.hpp font.h
 	$(CPP) -c -o $@ $< $(CPPFLAGS)
 
 $(TARGET) : $(TARGET_OBJS)
@@ -28,5 +33,3 @@ $(OBJDIR):
 
 $(BINDIR):
 	test -d $(BINDIR) || mkdir $(BINDIR)
-
-main.cpp: ssd1306.hpp helpers.hpp render.hpp config.hpp types.hpp lcd.hpp font.h

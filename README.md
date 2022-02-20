@@ -6,7 +6,7 @@ Very little CPU usage. No external dependencies. No incompatibility with an aban
 ## Prerequisites
 
 - Raspberry Pi (tested with [Raspberry Pi 4](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/))
-- SSD1306-based 128x64 OLED module over I2C protocol (tested with [this one](https://www.aliexpress.com/item/4000511247282.html))
+- SSD1306-based OLED module over I2C protocol (tested with only [this 128x64 display](https://www.aliexpress.com/item/4000511247282.html) and [this 128x32 display](https://www.aliexpress.com/item/1005003472541765.html))
 - C++11 compiler on Linux
 
 ## Usage
@@ -19,7 +19,8 @@ Very little CPU usage. No external dependencies. No incompatibility with an aban
 
 4. Build
   ```
-  $ make
+  $ make        # for 128x64 displays
+  $ make lcd=1  # for 128x32 displays
   ```
 
 5. Run

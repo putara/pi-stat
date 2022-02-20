@@ -131,14 +131,12 @@ private:
 #define FAIL_BAIL if (ret != S_OK) return ret; ret
     FAIL_BAIL = this->turn_off();
     FAIL_BAIL = this->command(SSD1306_SETMULTIPLEX);        // Set mux ratio
-    FAIL_BAIL = this->command(0x3F);                        // value = 0x3F
+    FAIL_BAIL = this->command(lcd::HEIGHT - 1);             // height
     FAIL_BAIL = this->command(SSD1306_SETDISPLAYOFFSET);    // Set display offset
     FAIL_BAIL = this->command(0x00);                        // no vertical shift
     FAIL_BAIL = this->command(SSD1306_SETSTARTLINE | 0x0);  // Set display start line to 0
     FAIL_BAIL = this->command(SSD1306_SEGREMAP | 0x1);      // Set segment re-map, column address 127 is mapped to SEG0
     FAIL_BAIL = this->command(SSD1306_COMSCANDEC);          // Set COM output scan direction/remapped mode, scan from COM7 to COM0
-    FAIL_BAIL = this->command(SSD1306_SETCOMPINS);          // Set COM pins configuration
-    FAIL_BAIL = this->command(0x12);                        // alt COM pin configuration, disable COM L/R remap
     FAIL_BAIL = this->command(SSD1306_DISPLAYALLON_RESUME); // Display RAM data
     FAIL_BAIL = this->command(SSD1306_SETDISPLAYCLOCKDIV);  // Set display clock
     FAIL_BAIL = this->command(0x80);                        // max freq, no divide ratio
@@ -153,7 +151,19 @@ private:
     FAIL_BAIL = this->command(SSD1306_SETPAGEADDRESS);      // Set page address
     FAIL_BAIL = this->command(0x00);                        // start address
     FAIL_BAIL = this->command(0x07);                        // end address
-    FAIL_BAIL = this->contrast(0xCF);                       // Set contrast control
+    if (lcd::HEIGHT == 64) {
+      FAIL_BAIL = this->command(SSD1306_SETCOMPINS);        // Set COM pins configuration
+      FAIL_BAIL = this->command(0x12);                      // alt COM pin configuration, disable COM L/R remap
+      FAIL_BAIL = this->contrast(0xCF);                     // Set contrast control
+    } else if (lcd::HEIGHT == 32) {
+      FAIL_BAIL = this->command(SSD1306_SETCOMPINS);        // Set COM pins configuration
+      FAIL_BAIL = this->command(0x02);
+      FAIL_BAIL = this->contrast(0x8F);                     // Set contrast control
+    } else if (lcd::HEIGHT == 16) {
+      FAIL_BAIL = this->command(SSD1306_SETCOMPINS);        // Set COM pins configuration
+      FAIL_BAIL = this->command(0x02);
+      FAIL_BAIL = this->contrast(0xAF);                     // Set contrast control
+    }
     FAIL_BAIL = this->mode(false);                          // Set non-inverting display mode
     FAIL_BAIL = S_OK;
 #undef FAIL_BAIL
@@ -217,6 +227,7 @@ public:
 
   result_t exit() noexcept {
     this->refresh(lcd());
+    this->turn_off();
     this->bus_.close();
     delete this;
     return S_OK;
