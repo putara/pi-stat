@@ -230,7 +230,7 @@ public:
   result_t turn_off() noexcept {
     result_t ret = this->command(SSD1306_DISPLAYOFF);
     if (ret == S_OK) {
-      os::msleep(1);
+      os::msleep(10);
     }
     return ret;
   }
@@ -238,7 +238,7 @@ public:
   result_t turn_on() noexcept {
     result_t ret = this->command(SSD1306_DISPLAYON);
     if (ret == S_OK) {
-      os::msleep(1);
+      os::msleep(10);
     }
     return ret;
   }
@@ -270,6 +270,9 @@ public:
     FAIL_BAIL = this->bus_.write(lcd.data(), lcd.size());
     FAIL_BAIL = S_OK;
 #undef FAIL_BAIL
+    if (ret == S_OK) {
+      os::msleep(1);
+    }
     return ret;
   }
 };
